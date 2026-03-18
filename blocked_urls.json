@@ -33,7 +33,14 @@
         "https://raw.githubusercontent.com/HeartDetectiveMarvel/Scary-Grocery-The-Night-Shift-HORROR/main/Scary-Grocery-The-Night-Shift-HORROR.lua",
         "https://raw.githubusercontent.com/TitanSurgeonRob/Scary-Shawarma-Kiosk-the-ANOMALY-horror/main/Scary-Shawarma-Kiosk-the-ANOMALY-horror.lua",
         "https://raw.githubusercontent.com/LeviathanPrivate/Secret-Staycation/main/Secret-Staycation.lua",
-        "https://raw.githubusercontent.com/driftpaladintrough/Save-Brainrots-from-LAVA/main/Save-Brainrots-from-LAVA.lua"
+        "https://raw.githubusercontent.com/driftpaladintrough/Save-Brainrots-from-LAVA/main/Save-Brainrots-from-LAVA.lua",
+        "https://raw.githubusercontent.com/Astralzecrimp/UPD-NFL-Universe-Football/main/UPD-NFL-Universe-Football.lua",
+        "https://raw.githubusercontent.com/SupporterContinue82/UPD-Titan-Fishing/main/UPD-Titan-Fishing.lua",
+        "https://raw.githubusercontent.com/Patrolshubushing44/UPD-South-Bronx-The-Trenches/main/UPD-South-Bronx-The-Trenches.lua",
+        "https://raw.githubusercontent.com/overlapsannincairn/UPD-Dudes-Battlegrounds/main/UPD-Dudes-Battlegrounds.lua",
+        "https://raw.githubusercontent.com/DrakeCongressman/UPD-Blue-Lock-Rivals/main/UPD-Blue-Lock-Rivals.lua",
+        "https://raw.githubusercontent.com/signallawmakercut/UPD-Basketball-Zero/main/UPD-Basketball-Zero.lua",
+        ""
     ],
     "patterns": [
         "%.exe$",
