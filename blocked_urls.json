@@ -1,0 +1,44 @@
+{
+    "domains": [
+        "discord.com/api/webhooks",
+        "discordapp.com/api/webhooks",
+        "webhook.site",
+        "requestbin",
+        "pipedream.net",
+        "hookbin.com",
+        "beeceptor.com",
+        "hastebin.com",
+        "pastebin.com",
+        "scriptix.live",
+        "keygenpro",
+        "keygenplus",
+        "getkey.pw"
+    ],
+    "urls": [
+        "https://raw.githubusercontent.com/gangrankburn/Run-For-Brainrots/main/Run-For-Brainrots.lua",
+        "https://raw.githubusercontent.com/GraspPhysician30/Raft-101-Survival/main/Raft-101-Survival.lua",
+        "https://raw.githubusercontent.com/Shinetenmanor/SMASH-Walls-For-Brainrots/main/SMASH-Walls-For-Brainrots.lua",
+        "https://raw.githubusercontent.com/curvecatbirdappraise/Squid-Game-X/main/Squid-Game-X.lua",
+        "https://raw.githubusercontent.com/SenseiStationLook/SpongeBob-Tower-Defense/main/SpongeBob-Tower-Defense.lua",
+        "https://raw.githubusercontent.com/Cablecludisclose/Spin-a-Soccer-Card/main/Spin-a-Soccer-Card.lua",
+        "https://raw.githubusercontent.com/GraspPhysician30/Spin-a-Baddie/main/Spin-a-Baddie.lua",
+        "https://raw.githubusercontent.com/TealHornetLiberate/Spider/main/Spider.lua",
+        "https://raw.githubusercontent.com/Glazesispigot/Spear-Training/main/Spear-Training.lua",
+        "https://raw.githubusercontent.com/Glazesispigot/Sols-RNG-BOSS-RAID-2/main/Sols-RNG-BOSS-RAID-2.lua",
+        "https://raw.githubusercontent.com/modulemidwifeaxe/something-evil-will-happen/main/something-evil-will-happen.lua",
+        "https://raw.githubusercontent.com/Burrowvonpeace/SNIPER-DUELS/main/SNIPER-DUELS.lua",
+        "https://raw.githubusercontent.com/GradeLawyerPop/Slap-DUELS-UPD/main/Slap-DUELS-UPD.lua",
+        "https://raw.githubusercontent.com/Shinetenmanor/Shrink-Hide-Seek/main/Shrink-Hide-Seek.lua",
+        "https://raw.githubusercontent.com/Harborgrureflect/SHARP/main/SHARP.lua",
+        "https://raw.githubusercontent.com/HeartDetectiveMarvel/Scary-Grocery-The-Night-Shift-HORROR/main/Scary-Grocery-The-Night-Shift-HORROR.lua",
+        "https://raw.githubusercontent.com/TitanSurgeonRob/Scary-Shawarma-Kiosk-the-ANOMALY-horror/main/Scary-Shawarma-Kiosk-the-ANOMALY-horror.lua",
+        "https://raw.githubusercontent.com/LeviathanPrivate/Secret-Staycation/main/Secret-Staycation.lua",
+        "https://raw.githubusercontent.com/driftpaladintrough/Save-Brainrots-from-LAVA/main/Save-Brainrots-from-LAVA.lua"
+    ],
+    "patterns": [
+        "%.exe$",
+        "%.exe%?",
+        "keygen",
+        "scriptix"
+    ]
+}
