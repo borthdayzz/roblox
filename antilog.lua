@@ -1,5 +1,5 @@
 --[[
-    AntiLog.lua
+    Antilog.lua
     Blocks Discord webhook logging, keyloggers, fake key systems,
     malware redirects, and other threats in free/leaked Roblox scripts.
     Usage: Paste and execute BEFORE running any untrusted script.
