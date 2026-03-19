@@ -14,7 +14,30 @@ local HttpService = game:GetService("HttpService")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- ── UI ───
+local executorName = "Unknown"
+pcall(function()
+    if identifyexecutor then
+        executorName = identifyexecutor()
+    end
+end)
+
+local hasHookfunction  = type(hookfunction)       == "function"
+local hasNewcclosure   = type(newcclosure)        == "function"
+local hasGetrawmeta    = type(getrawmetatable)    == "function"
+local hasSetreadonly   = type(setreadonly)        == "function"
+local hasNamecallMethod= type(getnamecallmethod)  == "function"
+
+local isLowEnd = not hasHookfunction or not hasGetrawmeta or not hasSetreadonly or not hasNamecallMethod
+
+local function safeNewcclosure(fn)
+    if hasNewcclosure then
+        local ok, result = pcall(newcclosure, fn)
+        if ok then return result end
+    end
+    return fn
+end
+
+-- ── UI ──
 
 local AntiLogGui = Instance.new("ScreenGui")
 AntiLogGui.Name = "AntiLogNotifications"
@@ -175,7 +198,7 @@ local function showNotif(notifType, title, body, duration)
     return card
 end
 
--- ── Logging ───
+-- ── Logging ──
 
 local function record(reason, url)
     blocked = blocked + 1
@@ -191,7 +214,7 @@ local function record(reason, url)
     showNotif(notifType, reason:sub(1, 45), shortUrl, 6)
 end
 
--- ── Blocklists ───
+-- ── Blocklists ──
 
 local BLOCKED_DOMAINS = {}
 local BLOCKED_URLS = {}
@@ -204,13 +227,12 @@ local FALLBACK = {
     domains = {
         "discord.com/api/webhooks","discordapp.com/api/webhooks","discord.gg",
         "webhook.site","requestbin","pipedream.net","hookbin.com","beeceptor.com",
-        "hastebin.com","pastebin.com","scriptix.live","keygenpro","keygenplus",
-        "getkey.pw","kingtools.top","globalcheats.cc","loot-link.com","lootdest.com",
-        "lootdest.org","flux.li","trigon.is","rekonise.com","socialwolvez.com",
-        "boostink.net","sub2get.com","sub2unlock.com","linkvertise.com","work.ink",
-        "paste.ee","rentry.co","controlc.com","ghostbin.com","webhook.express",
-        "ngrok.io","serveo.net","burpcollaborator.net","requestcatcher.com",
-        "127.0.0.1","localhost","0.0.0.0","192.168.","10.0.","172.16.",
+        "hastebin.com","scriptix.live","keygenpro","keygenplus",
+        "getkey.pw","kingtools.top","globalcheats.cc","lootdest.org","flux.li",
+        "trigon.is","rentry.co"
+        "controlc.com","ghostbin.com","webhook.express","ngrok.io","serveo.net",
+        "burpcollaborator.net","requestcatcher.com","127.0.0.1","localhost",
+        "0.0.0.0","192.168.","10.0.","172.16.",
     },
     urls = {
         "https://raw.githubusercontent.com/gangrankburn/Run-For-Brainrots/main/Run-For-Brainrots.lua",
@@ -243,25 +265,16 @@ local FALLBACK = {
         ":8080",":8484",":4444",":1337",":3000",":5000",":6969",":9999",
     },
     keysystem_gui_names = {
-        "PhantomKeySystem","KeySystem","KeyGui","KeyAuth","AccessKey",
-        "GetKey","KeyVerify","KeyCheck","KeyInput","KeyWindow",
-        "AuthSystem","AuthGui","AuthWindow","VerifyGui","VerifySystem",
+        "PhantomKeySystem",
     },
     keysystem_keywords = {
-        "phantom","scriptix","kingtools","globalcheats","get free key","getkey",
-        "access key","enter key","enter access","copy link","clearance level",
-        "authorization required","classified","authenticate","key system",
-        "free key","claim key","get key","linkvertise","loot-link","work.ink",
-        "rekonise","sub2unlock","sub2get",
+        "phantom","scriptix","kingtools","globalcheats",
     },
     clipboard_blocked_keywords = {
-        "scriptix","keygen","getkey","kingtools","globalcheats","linkvertise",
-        "loot%-link","lootdest","sub2unlock","sub2get","work%.ink","rekonise",
+        "scriptix","keygen","getkey","kingtools","globalcheats",
         "flux%.li","trigon%.is",
     },
 }
-
--- ── Key system scanner ───
 
 local function textMatchesKeySystem(text)
     if type(text) ~= "string" then return false end
@@ -296,8 +309,6 @@ local function scanGuiForKeySystem(gui)
     end
     return matchCount >= 2
 end
-
--- ── Blocklist checks ───
 
 local function isDomainBlocked(url)
     if type(url) ~= "string" then return false end
@@ -342,8 +353,6 @@ local function checkUrl(url, source)
     return false
 end
 
--- ── GUI snapshot ────
-
 local function getExistingGuis()
     local existing = {}
     for _, v in ipairs(PlayerGui:GetChildren()) do existing[v] = true end
@@ -354,119 +363,126 @@ local function getExistingGuis()
 end
 
 local bypassHook = false
-
-local mt = getrawmetatable(game)
-local oldNamecall = mt.__namecall
 local snapshotBeforeFetch = nil
 
-local BLOCKED_NAMECALLS = {
-    TeleportService = {
-        "Teleport","TeleportToSpawnByName","TeleportAsync",
-        "TeleportToPlaceInstance","TeleportPartyAsync",
-        "TeleportToPrivateServer","ReserveServer",
-    },
-    MarketplaceService = {
-        "PromptProductPurchase","PromptPurchase","PromptGamePassPurchase",
-        "PromptBundlePurchase","PromptPremiumPurchase",
-        "PromptSubscriptionPurchase","PromptNativePurchase",
-    },
-    StarterGui = { "SetCoreGuiEnabled","SetCore" },
-    GuiService  = { "SetMenuIsOpen" },
-}
+if hasGetrawmeta and hasSetreadonly and hasNamecallMethod and hasNewcclosure then
+    local mt = getrawmetatable(game)
+    local oldNamecall = mt.__namecall
 
-local blockedServiceInstances = {}
-task.spawn(function()
-    for serviceName in pairs(BLOCKED_NAMECALLS) do
-        pcall(function()
-            blockedServiceInstances[game:GetService(serviceName)] = serviceName
-        end)
-    end
-end)
+    local BLOCKED_NAMECALLS = {
+        TeleportService = {
+            "Teleport","TeleportToSpawnByName","TeleportAsync",
+            "TeleportToPlaceInstance","TeleportPartyAsync",
+            "TeleportToPrivateServer","ReserveServer",
+        },
+        MarketplaceService = {
+            "PromptProductPurchase","PromptPurchase","PromptGamePassPurchase",
+            "PromptBundlePurchase","PromptPremiumPurchase",
+            "PromptSubscriptionPurchase","PromptNativePurchase",
+        },
+        StarterGui = { "SetCoreGuiEnabled","SetCore" },
+        GuiService  = { "SetMenuIsOpen" },
+    }
 
-setreadonly(mt, false)
-mt.__namecall = newcclosure(function(self, ...)
-    local method = getnamecallmethod()
-    local args = {...}
+    local blockedServiceInstances = {}
+    task.spawn(function()
+        for serviceName in pairs(BLOCKED_NAMECALLS) do
+            pcall(function()
+                blockedServiceInstances[game:GetService(serviceName)] = serviceName
+            end)
+        end
+    end)
 
-    if bypassHook then
-        return oldNamecall(self, ...)
-    end
+    setreadonly(mt, false)
+    mt.__namecall = safeNewcclosure(function(self, ...)
+        local method = getnamecallmethod()
+        local args = {...}
 
-    local serviceName = blockedServiceInstances[self]
-    if serviceName then
-        local methods = BLOCKED_NAMECALLS[serviceName]
-        if methods then
-            for _, m in ipairs(methods) do
-                if method == m then
-                    record("Blocked: " .. serviceName .. "." .. method, method)
-                    showNotif("block", "Malicious Call Blocked",
-                        serviceName .. ":" .. method .. " blocked.", 7)
-                    return nil
+        if bypassHook then
+            return oldNamecall(self, ...)
+        end
+
+        local serviceName = blockedServiceInstances[self]
+        if serviceName then
+            local methods = BLOCKED_NAMECALLS[serviceName]
+            if methods then
+                for _, m in ipairs(methods) do
+                    if method == m then
+                        record("Blocked: " .. serviceName .. "." .. method, method)
+                        showNotif("block", "Malicious Call Blocked",
+                            serviceName .. ":" .. method .. " blocked.", 7)
+                        return nil
+                    end
                 end
             end
         end
-    end
 
-    if self == HttpService then
-        if method == "RequestAsync" then
-            local url = (type(args[1]) == "table" and args[1].Url) or ""
-            if checkUrl(url, "RequestAsync") then
-                return { Success = false, StatusCode = 403, StatusMessage = "Blocked by AntiLog", Body = "" }
+        if self == HttpService then
+            if method == "RequestAsync" then
+                local url = (type(args[1]) == "table" and args[1].Url) or ""
+                if checkUrl(url, "RequestAsync") then
+                    return { Success = false, StatusCode = 403, StatusMessage = "Blocked by AntiLog", Body = "" }
+                end
+            elseif method == "GetAsync" then
+                local url = type(args[1]) == "string" and args[1] or ""
+                if checkUrl(url, "GetAsync") then return "" end
+            elseif method == "PostAsync" then
+                local url = type(args[1]) == "string" and args[1] or ""
+                if checkUrl(url, "PostAsync") then return "" end
             end
-        elseif method == "GetAsync" then
-            local url = type(args[1]) == "string" and args[1] or ""
-            if checkUrl(url, "GetAsync") then return "" end
-        elseif method == "PostAsync" then
-            local url = type(args[1]) == "string" and args[1] or ""
-            if checkUrl(url, "PostAsync") then return "" end
         end
-    end
 
-    if method == "HttpGet" then
-        local url = type(args[1]) == "string" and args[1] or ""
-        if checkUrl(url, "HttpGet") then
-            snapshotBeforeFetch = getExistingGuis()
-            task.delay(1.5, function()
-                if snapshotBeforeFetch then
-                    for _, v in ipairs(PlayerGui:GetChildren()) do
-                        if not snapshotBeforeFetch[v] and v.Name ~= "AntiLogNotifications" then
-                            v:Destroy()
-                            showNotif("block", "GUI Removed", "Destroyed: " .. v.Name, 6)
-                        end
-                    end
-                    pcall(function()
-                        for _, v in ipairs(game:GetService("CoreGui"):GetChildren()) do
-                            if not snapshotBeforeFetch[v] and v.Name ~= "AntiLogNotifications" and v.Name ~= "RobloxGui" then
-                                if v:IsA("ScreenGui") and scanGuiForKeySystem(v) then
-                                    v:Destroy()
-                                    showNotif("block", "CoreGui GUI Removed", "Destroyed: " .. v.Name, 6)
-                                end
+        if method == "HttpGet" then
+            local url = type(args[1]) == "string" and args[1] or ""
+            if checkUrl(url, "HttpGet") then
+                snapshotBeforeFetch = getExistingGuis()
+                task.delay(1.5, function()
+                    if snapshotBeforeFetch then
+                        for _, v in ipairs(PlayerGui:GetChildren()) do
+                            if not snapshotBeforeFetch[v] and v.Name ~= "AntiLogNotifications" then
+                                v:Destroy()
+                                showNotif("block", "GUI Removed", "Destroyed: " .. v.Name, 6)
                             end
                         end
-                    end)
-                    snapshotBeforeFetch = nil
-                end
-            end)
-            return ""
+                        pcall(function()
+                            for _, v in ipairs(game:GetService("CoreGui"):GetChildren()) do
+                                if not snapshotBeforeFetch[v] and v.Name ~= "AntiLogNotifications" and v.Name ~= "RobloxGui" then
+                                    if v:IsA("ScreenGui") and scanGuiForKeySystem(v) then
+                                        v:Destroy()
+                                        showNotif("block", "CoreGui GUI Removed", "Destroyed: " .. v.Name, 6)
+                                    end
+                                end
+                            end
+                        end)
+                        snapshotBeforeFetch = nil
+                    end
+                end)
+                return ""
+            end
         end
-    end
 
-    return oldNamecall(self, ...)
-end)
-setreadonly(mt, true)
-
--- ── Hook executor request() functions ────
+        return oldNamecall(self, ...)
+    end)
+    setreadonly(mt, true)
+else
+    task.spawn(function()
+        task.wait(1)
+        showNotif("warn", "Limited Protection",
+            (executorName ~= "Unknown" and executorName or "Your executor") ..
+            " has limited UNC — HTTP hooks disabled.", 8)
+    end)
+end
 
 local function hookRequestFn(fn, name)
-    if not fn or not hookfunction then return end
-    local original = fn  -- capture original BEFORE hook
+    if not fn or not hasHookfunction or not hasNewcclosure then return end
+    local original = fn
     pcall(function()
-        hookfunction(fn, newcclosure(function(options)
+        hookfunction(fn, safeNewcclosure(function(options)
             if not bypassHook then
                 local url = (type(options) == "table" and options.Url) or ""
                 if checkUrl(url, name) then
                     return { Success = false, StatusCode = 403,
-                             StatusMessage = "Blocked by AntiLog, fuck off hahaha", Body = "", Headers = {} }
+                             StatusMessage = "Blocked by AntiLog", Body = "", Headers = {} }
                 end
             end
             return original(options)
@@ -476,9 +492,8 @@ end
 
 hookRequestFn(request,      "request()")
 hookRequestFn(http_request, "http_request()")
-if syn then hookRequestFn(syn.request, "syn.request()") end
+if syn  then hookRequestFn(syn.request,  "syn.request()")  end
 if http then hookRequestFn(http.request, "http.request()") end
-
 
 local function applyBlocklists(data)
     BLOCKED_DOMAINS = {}
@@ -508,12 +523,61 @@ local function applyBlocklists(data)
     end
 end
 
+local function fetchBlocklistRaw()
+    local BLOCKLIST_URL = "https://raw.githubusercontent.com/borthdayzz/roblox/refs/heads/main/blocked_urls.json"
+
+    if http and http.request then
+        local ok, res = pcall(http.request, { Url = BLOCKLIST_URL, Method = "GET" })
+        if ok and res and type(res.Body) == "string" and #res.Body > 10 then
+            return res.Body
+        end
+    end
+
+    if request then
+        local result = nil
+        local done = false
+        task.spawn(function()
+            local ok, res = pcall(request, { Url = BLOCKLIST_URL, Method = "GET" })
+            if ok and res and type(res.Body) == "string" and #res.Body > 10 then
+                result = res.Body
+            end
+            done = true
+        end)
+        local t = 0
+        repeat task.wait(0.1); t = t + 0.1 until done or t >= 10
+        if result then return result end
+    end
+
+    if http_request then
+        local result = nil
+        local done = false
+        task.spawn(function()
+            local ok, res = pcall(http_request, { Url = BLOCKLIST_URL, Method = "GET" })
+            if ok and res and type(res.Body) == "string" and #res.Body > 10 then
+                result = res.Body
+            end
+            done = true
+        end)
+        local t = 0
+        repeat task.wait(0.1); t = t + 0.1 until done or t >= 10
+        if result then return result end
+    end
+
+    local ok, raw = pcall(game.HttpGet, game, BLOCKLIST_URL)
+    if ok and raw and #raw > 10 then return raw end
+
+    return nil
+end
+
 local function loadBlocklists()
     bypassHook = true
-    local ok, result = pcall(function()
-        local raw = game:HttpGet("https://raw.githubusercontent.com/borthdayzz/roblox/refs/heads/main/blocked_urls.json")
-        return HttpService:JSONDecode(raw)
-    end)
+    local raw = fetchBlocklistRaw()
+    
+    local ok, result = false, nil
+    if raw then
+        ok, result = pcall(HttpService.JSONDecode, HttpService, raw)
+    end
+    
     bypassHook = false
 
     if ok and result and type(result) == "table" then
@@ -528,6 +592,8 @@ end
 
 loadBlocklists()
 
+-- ── Sandbox service metatables ──
+
 local protectedServices = { "Players", "UserInputService", "TextChatService", "Chat" }
 for _, svcName in ipairs(protectedServices) do
     pcall(function()
@@ -536,7 +602,6 @@ for _, svcName in ipairs(protectedServices) do
         if svcMt and setreadonly then setreadonly(svcMt, true) end
     end)
 end
-
 
 local function checkClipboard(text)
     if type(text) ~= "string" then return false end
@@ -559,10 +624,10 @@ local function checkClipboard(text)
     return false
 end
 
-if hookfunction and newcclosure and setclipboard then
+if hasHookfunction and hasNewcclosure and setclipboard then
     local origClipboard = setclipboard
     pcall(function()
-        hookfunction(setclipboard, newcclosure(function(text)
+        hookfunction(setclipboard, safeNewcclosure(function(text)
             if checkClipboard(text) then return end
             return origClipboard(text)
         end))
@@ -574,6 +639,8 @@ elseif setclipboard then
         return realSetClipboard(text)
     end
 end
+
+-- ── Key System Detector ──
 
 local function handleDetected(gui, location)
     record("FakeKeySystem DETECTED [" .. location .. "]: " .. gui.Name, gui.Name)
@@ -626,11 +693,13 @@ task.spawn(function()
     end)
 end)
 
--- ── Startup ────
+-- ── Startup ──
 
 task.wait(0.5)
 showNotif("info", "AntiLog v3 Active",
     #BLOCKED_DOMAINS .. " domains · " .. #BLOCKED_URLS .. " URLs · " .. #BLOCKED_PATTERNS .. " patterns", 5)
+
+-- ── Public API ──
 
 _G.AntiLog = {
     getLog = function() return log end,
@@ -664,5 +733,10 @@ _G.AntiLog = {
     end,
     reloadBlocklists = function()
         loadBlocklists()
+    end,
+    executorInfo = function()
+        showNotif(isLowEnd and "warn" or "info",
+            "Executor: " .. executorName,
+            isLowEnd and "Limited protection mode" or "Full protection active", 5)
     end,
 }
