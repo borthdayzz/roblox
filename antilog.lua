@@ -228,9 +228,8 @@ local FALLBACK = {
         "discord.com/api/webhooks","discordapp.com/api/webhooks","discord.gg",
         "webhook.site","requestbin","pipedream.net","hookbin.com","beeceptor.com",
         "hastebin.com","scriptix.live","keygenpro","keygenplus",
-        "getkey.pw","kingtools.top","globalcheats.cc","lootdest.org","flux.li",
-        "trigon.is","rentry.co"
-        "controlc.com","ghostbin.com","webhook.express","ngrok.io","serveo.net",
+        "getkey.pw","kingtools.top","globalcheats.cc","lootdest.org","flux.li","trigon.is","rentry.co",
+		"controlc.com","ghostbin.com","webhook.express","ngrok.io","serveo.net",
         "burpcollaborator.net","requestcatcher.com","127.0.0.1","localhost",
         "0.0.0.0","192.168.","10.0.","172.16.",
     },
