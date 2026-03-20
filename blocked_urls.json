@@ -40,6 +40,7 @@
         "canarytokens.com",
         "interactsh.com",
         "skama.net",
+        "cdn.sourceb.in",
         "127.0.0.1",
         "localhost",
         "0.0.0.0",
@@ -83,9 +84,13 @@
         "https://raw.githubusercontent.com/TitanSurgeonRob/Scary-Shawarma-Kiosk-the-ANOMALY-horror/main/Scary-Shawarma-Kiosk-the-ANOMALY-horror.lua",
         "https://raw.githubusercontent.com/LeviathanPrivate/Secret-Staycation/main/Secret-Staycation.lua",
         "https://raw.githubusercontent.com/driftpaladintrough/Save-Brainrots-from-LAVA/main/Save-Brainrots-from-LAVA.lua",
+        "https://raw.githubusercontent.com/xentace/MM2/refs/heads/main/script20%25MM2",
+        "https://raw.githubusercontent.com/swiftshix2/elyhubmm2/refs/heads/main/lua",
         "https://kingtools.top/fiiii22j2j2jdelete.lua",
         "https://globalcheats.cc/config.php",
-        "https://cdn.sourceb.in/bins/c1wgbJszcd/0"
+        "https://cdn.sourceb.in/bins/c1wgbJszcd/0",
+        "http://72.56.90.233:3910/api/run/eyJpZCI6IjgyYTI1MGE0LTIyZmQtNDVkNC05MjAzLWYwMDgwNjNjNzYzOSIsImtpbmQiOiJsb2FkZXIiLCJ2aXN1YWwiOnsiaWQiOiJ1bml2ZXJzYWwifX0"
+        
     ],
     "patterns": [
         "%.exe$",
