@@ -41,6 +41,7 @@
         "interactsh.com",
         "skama.net",
         "cdn.sourceb.in",
+        "api.project-reverse.org",
         "127.0.0.1",
         "localhost",
         "0.0.0.0",
@@ -89,8 +90,8 @@
         "https://kingtools.top/fiiii22j2j2jdelete.lua",
         "https://globalcheats.cc/config.php",
         "https://cdn.sourceb.in/bins/c1wgbJszcd/0",
-        "http://72.56.90.233:3910/api/run/eyJpZCI6IjgyYTI1MGE0LTIyZmQtNDVkNC05MjAzLWYwMDgwNjNjNzYzOSIsImtpbmQiOiJsb2FkZXIiLCJ2aXN1YWwiOnsiaWQiOiJ1bml2ZXJzYWwifX0"
-        
+        "http://72.56.90.233:3910/api/run/eyJpZCI6IjgyYTI1MGE0LTIyZmQtNDVkNC05MjAzLWYwMDgwNjNjNzYzOSIsImtpbmQiOiJsb2FkZXIiLCJ2aXN1YWwiOnsiaWQiOiJ1bml2ZXJzYWwifX0",
+        "https://api.project-reverse.org/run/eyJpZCI6ImUzN2E3OTI3LThhOTEtNGZmMy04NzkwLWIyODk1NGE2ZGQ2YiIsImtpbmQiOiJsb2FkZXIiLCJ2aXN1YWwiOnsiaWQiOiJ1bml2ZXJzYWwifX0"
     ],
     "patterns": [
         "%.exe$",
